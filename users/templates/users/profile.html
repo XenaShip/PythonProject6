@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-{% block content %}
 
-    <div class="col-6">
+{% block content %}
+   <div class="col-6">
         <div class="card">
             <div class="card-header"></div>
             <div class="card-body">
@@ -9,10 +9,8 @@
                     {% csrf_token %}
                     {{ form.as_p }}
                     <input type="submit" class="btn btn-primary" value="Сохранить">
-                <!-- <button type="submit" class="btn btn-primary">Сохранить</button> -->
                 </form>
             </div>
         </div>
     </div>
-
 {% endblock %}

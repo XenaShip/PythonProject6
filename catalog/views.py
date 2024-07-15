@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from catalog.models import Product
 from django.forms import inlineformset_factory
@@ -11,25 +12,25 @@ class ContactsTemplateView(generic.TemplateView):
 
 class ProductListView(generic.ListView):
     model = Product
+    template_name = 'catalog/product_list.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['title'] = 'Список товаров'
-        template_name = 'catalog/product_list.html'
         return context_data
 
 
 class ProductDetailView(generic.DetailView):
     model = Product
+    template_name = 'catalog/product_detail.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['title'] = context_data['object']
-        template_name = 'catalog/product_detail.html'
         return context_data
 
 
-class ProductCreateView(generic.CreateView):
+class ProductCreateView(LoginRequiredMixin, generic.CreateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('catalog:product_list')
@@ -37,13 +38,20 @@ class ProductCreateView(generic.CreateView):
         'title': 'Создание продукта'
     }
 
+    def form_valid(self, form):
+        product = form.save()
+        user = self.request.user
+        product.owner = user
+        product.save()
+        return super().form_valid(form)
 
-class ProductDeleteView(generic.DeleteView):
+
+class ProductDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Product
     success_url = reverse_lazy('catalog:product_list')
 
 
-class ProductUpdateView(generic.UpdateView):
+class ProductUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Product
     form_class = ProductForm
     extra_context = {

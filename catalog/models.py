@@ -1,14 +1,17 @@
 from django.db import models
 
+from users.models import User
 
+NULLABLE = {'blank': True, 'null': True}
 class Product(models.Model):
     name_product = models.CharField(max_length=20, verbose_name='имя')
-    description = models.CharField(max_length=150, verbose_name='описание')
-    preview = models.ImageField(upload_to='product/', verbose_name='изображение', null=True)
-    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True)
-    price = models.IntegerField(verbose_name='цена')
+    description = models.CharField(max_length=150, verbose_name='описание', **NULLABLE)
+    preview = models.ImageField(upload_to='product/', verbose_name='изображение', **NULLABLE)
+    category = models.ForeignKey('Category', on_delete=models.SET_NULL, **NULLABLE)
+    price = models.IntegerField(verbose_name='цена', **NULLABLE)
     made = models.DateField(verbose_name='изготовлено', auto_now_add=True)
     change = models.DateField(verbose_name='изменено', auto_now=True)
+    owner = models.ForeignKey(User, verbose_name='Владелец', blank=True, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         # Строковое отображение объекта

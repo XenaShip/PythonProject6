@@ -8,8 +8,10 @@
                 <form method="POST">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <input type="submit" class="btn btn-primary" value="Сохранить">
-                <!-- <button type="submit" class="btn btn-primary">Сохранить</button> -->
+                    <input type="submit" class="btn btn-primary" value="Войти">
+                     <a href="{% url 'users:reset_password' %}" type="submit" class="btn btn-warning">
+                        Восстановить пароль
+                    </a>
                 </form>
             </div>
         </div>
