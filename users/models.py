@@ -1,8 +1,4 @@
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin
-from django.contrib.auth.validators import UnicodeUsernameValidator
-from django.utils.translation import gettext_lazy as _
 from django.db import models
 
 
@@ -22,3 +18,11 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    def __str__(self):
+        # Строковое отображение объекта
+        return self.email
+
+    class Meta:
+        verbose_name = 'пользователь'
+        verbose_name_plural = 'пользователи'
