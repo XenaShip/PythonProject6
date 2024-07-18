@@ -1,9 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.views import generic
 from catalog.models import Product
 from django.forms import inlineformset_factory
 from django.urls import reverse_lazy, reverse
-from catalog.forms import ProductForm
+from catalog.forms import ProductForm, ProductModerForm
 
 
 class ContactsTemplateView(generic.TemplateView):
@@ -58,3 +59,12 @@ class ProductUpdateView(LoginRequiredMixin, generic.UpdateView):
         'title': 'Изменение продукта'
     }
     success_url = reverse_lazy('catalog:product_list')
+
+    def get_form_class(self):
+        user = self.request.user
+        if user == self.object.owner:
+            return ProductForm
+        if user.has_perm("catalog.can_edit_description") and user.has_perm("catalog.can_edit_category"):
+            return ProductModerForm
+        raise PermissionDenied
+
