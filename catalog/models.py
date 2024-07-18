@@ -3,6 +3,8 @@ from django.db import models
 from users.models import User
 
 NULLABLE = {'blank': True, 'null': True}
+
+
 class Product(models.Model):
     name_product = models.CharField(max_length=20, verbose_name='имя')
     description = models.CharField(max_length=150, verbose_name='описание', **NULLABLE)
@@ -20,6 +22,10 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'продукт'
         verbose_name_plural = 'продукты'
+        permissions = [
+            ("can_edit_category", "Can edit category"),
+            ("can_edit_description", "Can edit description"),
+        ]
 
 
 class Category(models.Model):
