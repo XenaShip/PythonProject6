@@ -1,10 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.views import generic
-from catalog.models import Product
+from catalog.models import Product, Category
 from django.forms import inlineformset_factory
 from django.urls import reverse_lazy, reverse
 from catalog.forms import ProductForm, ProductModerForm
+from catalog.services import get_category_from_cache
 
 
 class ContactsTemplateView(generic.TemplateView):
@@ -68,3 +69,15 @@ class ProductUpdateView(LoginRequiredMixin, generic.UpdateView):
             return ProductModerForm
         raise PermissionDenied
 
+
+class CategoriesListView(generic.ListView):
+    model = Category
+    template_name = 'catalog/categories_list.html'
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['title'] = 'Список категорий'
+        return context_data
+
+    def get_queryset(self):
+        return get_category_from_cache()
